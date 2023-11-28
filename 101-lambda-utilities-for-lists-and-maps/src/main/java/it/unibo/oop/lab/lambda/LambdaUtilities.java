@@ -2,6 +2,8 @@ package it.unibo.oop.lab.lambda;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,6 +24,7 @@ import java.util.stream.IntStream;
  * Realize the three methods **WITHOUT** using the Stream library, but only leveraging the lambdas.
  *
  */
+
 public final class LambdaUtilities {
 
     private LambdaUtilities() {
@@ -61,7 +64,9 @@ public final class LambdaUtilities {
         /*
          * Suggestion: consider Optional.filter
          */
-        return null;
+        final List<Optional<T>> l = new ArrayList<>();
+        list.forEach(t -> l.add(Optional.of(t).filter(pre)));
+        return l;
     }
 
     /**
@@ -80,7 +85,13 @@ public final class LambdaUtilities {
         /*
          * Suggestion: consider Map.merge
          */
-        return null;
+        final Map<R, Set<T>> map1 = new LinkedHashMap<>();
+        list.forEach(t -> map1.merge(op.apply(t), Set.of(t), (old, newV) -> {
+            final var merged = new LinkedHashSet<>(old);
+            merged.addAll(newV);
+            return merged;
+        }));
+        return map1;
     }
 
     /**
@@ -101,7 +112,9 @@ public final class LambdaUtilities {
          *
          * Keep in mind that a map can be iterated through its forEach method
          */
-        return null;
+        final Map<K, V> map1 = new LinkedHashMap<>();
+        map.forEach((key, value) -> map1.put(key, value.orElse(def.get())));
+        return map1;
     }
 
     /**

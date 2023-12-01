@@ -1,27 +1,11 @@
 package it.unibo.mvc;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Executable;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-
-
+    
 /**
  * Encapsulates the concept of configuration.
  */
 public final class Configuration {
 
-    
     private final int max; 
     private final int min;
     private final int attempts;
@@ -79,33 +63,14 @@ public final class Configuration {
      */
     public static class Builder {
 
+        private static final int MIN = 0;
+        private static final int MAX = 100;
+        private static final int ATTEMPTS = 10;
+
         private int min = MIN;
         private int max = MAX;
         private int attempts = ATTEMPTS;
         private boolean consumed = false;
-        
-            private static final String PATH = System.getProperty("user.home")
-                + File.separator
-                + "config.yml";
-        private final String nameFile = "config.yml";
-        private File file = new File(PATH + File.separator + nameFile);
-        private ArrayList<String> lines = new ArrayList<String>();
-
-        public void readOnFile() throws IOException {
-                try (
-                    final BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                    String line = reader.readLine();
-                        while(line != null){
-                            lines.add(line);
-                            line = reader.readLine();
-                        }
-                    }
-            }
-        }
-
-
-
-        
 
         /**
          * @param min the minimum value

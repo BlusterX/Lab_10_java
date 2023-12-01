@@ -1,15 +1,17 @@
 package it.unibo.mvc;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  */
 public final class DrawNumberApp implements DrawNumberViewObserver {
-    private static final int MIN = 0;
-    private static final int MAX = 100;
-    private static final int ATTEMPTS = 10;
+    private static final String pathFile = "src/main/resources/config.yml";
+    final Configuration.Builder configBuild = new Configuration.Builder();
 
     private final DrawNumber model;
     private final List<DrawNumberView> views;
@@ -17,7 +19,39 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
     /**
      * @param views
      *            the views to attach
+     * @throws IOException
      */
+
+    private void ConfFile(final String file) throws IOException{
+        try (final BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while((line = reader.readLine()) != null){
+                var lines = Arrays.asList(line.split(": "));
+                String name = lines.get(0);
+                int value = Integer.parseInt(lines.get(1));
+                if(name.contains("max")){
+                    getConfigBuild().setMax(value);
+                }else if(name.contains("min")){
+                    getConfigBuild().setMin(value);
+                }else if(name.contains("attempts")){
+                    getConfigBuild().setAttempts(value);
+                }else{
+                    displayError("Invalid config file.");
+                }
+            }
+        }
+    }
+
+    private Configuration.Builder getConfigBuild(){
+        return configBuild;
+    }
+
+    private void displayError(String error) {
+        for (final DrawNumberView view : views) {
+            view.displayError(error);
+        }
+    }
+
     public DrawNumberApp(final DrawNumberView... views) {
         /*
          * Side-effect proof
@@ -27,7 +61,12 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
             view.setObserver(this);
             view.start();
         }
-        this.model = new DrawNumberImpl(MIN, MAX, ATTEMPTS);
+        try {
+            ConfFile(pathFile);
+        } catch (IOException | NumberFormatException e) {
+            displayError("Error: " + e.getMessage());
+        }
+        this.model = new DrawNumberImpl(getConfigBuild().build());
     }
 
     @Override
@@ -66,7 +105,11 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
      * @throws FileNotFoundException 
      */
     public static void main(final String... args) throws FileNotFoundException {
-        new DrawNumberApp(new DrawNumberViewImpl());
+        new DrawNumberApp(
+            new DrawNumberViewImpl(), 
+            new DrawNumberViewImpl(), 
+            new PrintStreamView(System.out), 
+            new PrintStreamView("output.log"));
     }
 
 }

@@ -10,48 +10,46 @@ import java.util.List;
 /**
  */
 public final class DrawNumberApp implements DrawNumberViewObserver {
-    private static final String pathFile = "src/main/resources/config.yml";
-    final Configuration.Builder configBuild = new Configuration.Builder();
+    private static final String PATHFILE = "src/main/resources/config.yml";
+    private final Configuration.Builder configBuild = new Configuration.Builder();
 
     private final DrawNumber model;
     private final List<DrawNumberView> views;
 
-    /**
-     * @param views
-     *            the views to attach
-     * @throws IOException
-     */
-
-    private void ConfFile(final String file) throws IOException{
-        try (final BufferedReader reader = new BufferedReader(new FileReader(file))) {
+    private void confFile(final String file) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
-            while((line = reader.readLine()) != null){
+            while ((line = reader.readLine()) != null) {
                 var lines = Arrays.asList(line.split(": "));
                 String name = lines.get(0);
                 int value = Integer.parseInt(lines.get(1));
-                if(name.contains("max")){
+                if (name.contains("max")) {
                     getConfigBuild().setMax(value);
-                }else if(name.contains("min")){
+                } else if (name.contains("min")) {
                     getConfigBuild().setMin(value);
-                }else if(name.contains("attempts")){
+                } else if (name.contains("attempts")) {
                     getConfigBuild().setAttempts(value);
-                }else{
+                } else {
                     displayError("Invalid config file.");
                 }
             }
         }
     }
 
-    private Configuration.Builder getConfigBuild(){
+    private Configuration.Builder getConfigBuild() {
         return configBuild;
     }
 
-    private void displayError(String error) {
+    private void displayError(final String error) {
         for (final DrawNumberView view : views) {
             view.displayError(error);
         }
     }
 
+    /**
+     * @param views the views to attach 
+     * @throws IOException
+     */
     public DrawNumberApp(final DrawNumberView... views) {
         /*
          * Side-effect proof
@@ -62,7 +60,7 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
             view.start();
         }
         try {
-            ConfFile(pathFile);
+            confFile(PATHFILE);
         } catch (IOException | NumberFormatException e) {
             displayError("Error: " + e.getMessage());
         }

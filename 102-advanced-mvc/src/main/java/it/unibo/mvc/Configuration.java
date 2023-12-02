@@ -1,6 +1,5 @@
 package it.unibo.mvc;
 
-    
 /**
  * Encapsulates the concept of configuration.
  */

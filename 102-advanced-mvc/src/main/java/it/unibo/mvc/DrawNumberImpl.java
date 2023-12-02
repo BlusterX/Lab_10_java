@@ -15,10 +15,11 @@ public final class DrawNumberImpl implements DrawNumber {
     private final Random random = new Random();
 
     /**
+     * @param conf 
      * @throws IllegalStateException if the configuration is not consistent
      */
-    public DrawNumberImpl(Configuration conf){
-        if(!conf.isConsistent()){
+    public DrawNumberImpl(final Configuration conf) {
+        if (!conf.isConsistent()) {
             throw new IllegalStateException("Inconstistent configuration.");
         }
         this.min = conf.getMin();

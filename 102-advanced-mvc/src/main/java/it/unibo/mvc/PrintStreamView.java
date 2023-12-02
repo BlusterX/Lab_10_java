@@ -1,8 +1,4 @@
-/**
- * 
- */
 package it.unibo.mvc;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -57,8 +53,11 @@ public final class PrintStreamView implements DrawNumberView {
     public void result(final DrawResult res) {
         out.println(res.getDescription());
     }
-
-    public void displayError(String message) {
+    /**
+     * @param message message for the display error
+     * 
+     */
+    public void displayError(final String message) {
         out.println(message);
     }
 

@@ -28,11 +28,7 @@ public interface DrawNumberView {
 
 
     /**
-     * @param message
+     * @param message message for the display error
      */
     void displayError(String message);
-
-
-
-    
 }
